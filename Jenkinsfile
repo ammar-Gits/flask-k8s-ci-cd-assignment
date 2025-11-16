@@ -2,46 +2,44 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "your-dockerhub-user/flask-app"
-        TAG = "latest"
+        // Set your kubeconfig path (Windows requires double backslashes)
+        KUBECONFIG = "C:\\Users\\Kashan Ali\\.kube\\config"
+        DOCKER_IMAGE = "myapp:latest"
     }
 
     stages {
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:$TAG .'
+                echo 'Building Docker image...'
+                bat "docker build -t %DOCKER_IMAGE% ."
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f kubernetes/deployment.yaml'
-                sh 'kubectl apply -f kubernetes/service.yaml'
+                echo 'Applying Kubernetes manifests...'
+                bat "kubectl apply -f kubernetes\\deployment.yaml"
+                bat "kubectl apply -f kubernetes\\service.yaml"
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                sh 'kubectl rollout status deployment/flask-deployment'
-                sh 'kubectl get pods'
-                sh 'kubectl get svc'
-    stages {
-        stage('Build') {
-            steps {
-                sh 'docker build -t flask-app .'
+                echo 'Checking rollout status...'
+                bat "kubectl rollout status deployment/myapp-deployment"
+                echo 'Listing pods and services...'
+                bat "kubectl get pods"
+                bat "kubectl get svc"
             }
         }
+    }
 
-        stage('Test') {
-            steps {
-                echo 'Running tests... (none for now)'
-            }
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
         }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deployment step placeholder.'
-            }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
         }
     }
 }
