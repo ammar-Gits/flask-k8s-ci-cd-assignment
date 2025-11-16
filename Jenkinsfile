@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Set your kubeconfig path (Windows requires double backslashes)
-        KUBECONFIG = "C:\\Users\\Kashan Ali\\.kube\\config"
+        KUBECONFIG = "C:\\Users\\Kashan Mehdi\\.kube\\config"
         DOCKER_IMAGE = "myapp:latest"
     }
 
