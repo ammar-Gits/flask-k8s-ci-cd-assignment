@@ -28,7 +28,7 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 echo 'Checking deployment rollout...'
-                bat "kubectl rollout status deployment/myapp-deployment"
+                bat "kubectl rollout status deployment/flask-app"
                 echo 'Listing all pods...'
                 bat "kubectl get pods"
                 echo 'Listing services...'
