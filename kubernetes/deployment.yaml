@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-deployment
+  name: flask-app        # keeping the main branch name
 spec:
-  replicas: 3
+  replicas: 3            # updated to show scaling
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -11,21 +11,21 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: my-app
+      app: flask-app
   template:
     metadata:
       labels:
-        app: my-app
+        app: flask-app
     spec:
       containers:
-      - name: my-app-container
-        image: my-app-image:latest
-        ports:
-        - containerPort: 5000
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "250m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
+        - name: flask-app
+          image: flask-app:latest
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
