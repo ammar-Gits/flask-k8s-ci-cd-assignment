@@ -1,17 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app        # keeping the main branch name
+  name: flask-app
 spec:
-  replicas: 3            # updated to show scaling
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  name: flask-app
-spec:
-  replicas: 1
   selector:
     matchLabels:
       app: flask-app
@@ -23,6 +20,7 @@ spec:
       containers:
         - name: flask-app
           image: flask-app:latest
+          imagePullPolicy: Never   # important for local image
           ports:
             - containerPort: 5000
           resources:
