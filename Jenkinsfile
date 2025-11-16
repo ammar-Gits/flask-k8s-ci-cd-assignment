@@ -11,10 +11,17 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image...'
-                bat "docker build -t %DOCKER_IMAGE% ."
+                echo 'Building Docker image inside Minikube...'
+                // Use Minikube Docker daemon
+                bat '''
+                FOR /F "tokens=2 delims==" %%i IN ('minikube docker-env --shell cmd ^| find "DOCKER_HOST"') DO SET DOCKER_HOST=%%i
+                FOR /F "tokens=2 delims==" %%i IN ('minikube docker-env --shell cmd ^| find "DOCKER_TLS_VERIFY"') DO SET DOCKER_TLS_VERIFY=%%i
+                FOR /F "tokens=2 delims==" %%i IN ('minikube docker-env --shell cmd ^| find "DOCKER_CERT_PATH"') DO SET DOCKER_CERT_PATH=%%i
+                docker build -t flask-app:latest .
+                '''
             }
         }
+
 
         stage('Deploy to Kubernetes') {
             steps {
