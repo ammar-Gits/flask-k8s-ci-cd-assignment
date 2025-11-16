@@ -1,6 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: flask-app        # keeping the main branch name
+spec:
+  replicas: 3            # updated to show scaling
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   name: flask-app
 spec:
   replicas: 1
@@ -17,3 +25,10 @@ spec:
           image: flask-app:latest
           ports:
             - containerPort: 5000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
