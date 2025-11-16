@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // Set your kubeconfig path (Windows requires double backslashes)
+        // Path to kubeconfig (use double backslashes for Windows)
         KUBECONFIG = "C:\\Users\\Kashan Mehdi\\.kube\\config"
+        // Docker image name
         DOCKER_IMAGE = "myapp:latest"
     }
 
@@ -17,7 +18,8 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Applying Kubernetes manifests...'
+                echo 'Deploying to Kubernetes...'
+                // Apply Deployment and Service manifests
                 bat "kubectl apply -f kubernetes\\deployment.yaml"
                 bat "kubectl apply -f kubernetes\\service.yaml"
             }
@@ -25,10 +27,11 @@ pipeline {
 
         stage('Verify Deployment') {
             steps {
-                echo 'Checking rollout status...'
+                echo 'Checking deployment rollout...'
                 bat "kubectl rollout status deployment/myapp-deployment"
-                echo 'Listing pods and services...'
+                echo 'Listing all pods...'
                 bat "kubectl get pods"
+                echo 'Listing services...'
                 bat "kubectl get svc"
             }
         }
@@ -39,7 +42,7 @@ pipeline {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check logs for details.'
+            echo 'Pipeline failed! Check the console output for errors.'
         }
     }
 }
